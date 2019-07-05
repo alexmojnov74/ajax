@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+<title>Title</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md">
+        <div id="topButtons"></div>
+        </div>
+        <div class="col-md search">
+        
+        <input id="animalSearch" type="text"/>
+        <button id="submit" type="button" class="btn btn-primary">Submit</button>
+        
+        </div>
+    </div>
+    <div class="jumbotron">
+        <div id="gifResults"></div>
+    </div>
+    </div>
+       
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+
+        var animals = [
+                       "Cat", 
+                       "Dog", 
+                       "Frog", 
+                       "Horse"
+                       ];
+
+        for (var i = 0; i < animals.length; i++) {
+            $("#topButtons").append(`<button class ="btn-success" data-attr=${animals[i]}>${animals[i]} </button>`);
+        }
+
+
+
+        $("#topButtons").on("click",".btn-success", function(event){
+            event.preventDefault();
+
+        var searchText = $(this).attr("data-attr");    
+        console.log(searchText);
+
+        var queryURL = `https://api.giphy.com/v1/gifs/search?q=${searchText}&api_key=BkaUZZWcFij6J7AoQj3WtPb1R2p9O6V9&limit=12`;
+ 
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+            }).then(function(response) {
+            console.log(response);
+            var data = response.data;
+            for (var i = 0; i < response.data.length; i++) {
+                $("#gifResults").append(
+                `<img class="gifimages" data-still="${data[i].images.fixed_height_still.url}"
+                data-animate ="${data[i].images.fixed_height.url}" 
+                data-state="animate" src="${data[i].images.fixed_height.url}" width=310 height=310 />`);
+            }
+            });
+        });
+            $("#submit").on("click", function (event){
+                event.preventDefault();
+                var animal = $("#animalSearch").val().trim();
+                               
+                animals.push(animal)
+                $("#topButtons").append(`<button class ="btn-success" data-attr=${animal}>${animal} </button>`);
+
+                $("#animalSearch").val('');
+
+            })
+            
+            $("#gifResults").on("click", ".gifimages", function (event){
+                event.preventDefault();
+                if($(this).attr("data-state") ==="animate")
+                {
+                    $(this).attr("src", $(this).attr("data-still"))
+                    $(this).attr("data-state","still")
+                }
+                else {
+                    $(this).attr("src", $(this).attr("data-animate"))
+                    $(this).attr("data-state","animate")
+                }
+            });
+
+</script>
+        
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.15.0/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
