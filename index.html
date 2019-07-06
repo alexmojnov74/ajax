@@ -15,15 +15,15 @@
         <div class="col-md">
         <div id="topButtons"></div>
         </div>
+
         <div class="col-md search">
-        
-        <input id="animalSearch" type="text"/>
+            <input id="animalSearch" type="text"/>
         <button id="submit" type="button" class="btn btn-primary">Submit</button>
         
         </div>
     </div>
     <div class="jumbotron">
-        <div id="gifResults"></div>
+        <div id="gifResults" class="gifimages"></div>
     </div>
     </div>
        
@@ -61,7 +61,7 @@
             console.log(response);
             var data = response.data;
             for (var i = 0; i < response.data.length; i++) {
-                $("#gifResults").append(
+                $("#gifResults").prepend(
                 `<img class="gifimages" data-still="${data[i].images.fixed_height_still.url}"
                 data-animate ="${data[i].images.fixed_height.url}" 
                 data-state="animate" src="${data[i].images.fixed_height.url}" width=310 height=310 />`);
